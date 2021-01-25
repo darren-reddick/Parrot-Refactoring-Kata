@@ -2,7 +2,8 @@ const LOAD_FACTOR: f32 = 9.0;
 const BASE_SPEED: f32 = 12.0;
 const FIXED_BASE_SPEED: f32 = 24.0;
 
-struct ParrotConfig {
+#[derive(Debug)]
+pub struct ParrotConfig {
     number_of_coconuts: usize,
     voltage: f32,
     nailed: bool,
@@ -10,7 +11,7 @@ struct ParrotConfig {
 
 impl ParrotConfig {
     #[allow(dead_code)]
-    fn new(number_of_coconuts: usize, voltage: f32, nailed: bool) -> Self {
+    pub fn new(number_of_coconuts: usize, voltage: f32, nailed: bool) -> Self {
         ParrotConfig {
             number_of_coconuts: number_of_coconuts,
             voltage: voltage,
@@ -67,16 +68,27 @@ impl Parrot for NorwegianBlueParrot {
     }
 }
 
-#[allow(dead_code)]
-struct ParrotTest<'a> {
-    expected: f32,
-    config: ParrotConfig,
-    description: &'a str,
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[derive(Debug)]
+    struct ParrotTest<'a> {
+        expected: f32,
+        config: ParrotConfig,
+        description: &'a str,
+    }
+
+    #[macro_use]
+    macro_rules! parrot_test {
+        ($type: ty, $tests:expr) => {{
+            for test in $tests {
+                let parrot = <$type>::new(test.config);
+                println!("{}", test.description);
+                assert_eq!(parrot.speed().unwrap(), test.expected);
+            }
+        }};
+    }
 
     #[test]
     fn test_european_parrot_speed() {
@@ -86,11 +98,7 @@ mod tests {
             description: "Test european parrot speed",
         }];
 
-        for test in tests {
-            let parrot = EuropeanParrot::new(test.config);
-            println!("{}", test.description);
-            assert_eq!(parrot.speed().unwrap(), test.expected);
-        }
+        parrot_test!(EuropeanParrot, tests)
     }
 
     #[test]
@@ -113,11 +121,7 @@ mod tests {
             },
         ];
 
-        for test in tests {
-            let parrot = AfricanParrot::new(test.config);
-            println!("{}", test.description);
-            assert_eq!(parrot.speed().unwrap(), test.expected);
-        }
+        parrot_test!(AfricanParrot, tests)
     }
 
     #[test]
@@ -140,10 +144,6 @@ mod tests {
             },
         ];
 
-        for test in tests {
-            let parrot = NorwegianBlueParrot::new(test.config);
-            println!("{}", test.description);
-            assert_eq!(parrot.speed().unwrap(), test.expected);
-        }
+        parrot_test!(NorwegianBlueParrot, tests)
     }
 }
