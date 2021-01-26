@@ -2,7 +2,6 @@ const LOAD_FACTOR: f32 = 9.0;
 const BASE_SPEED: f32 = 12.0;
 const FIXED_BASE_SPEED: f32 = 24.0;
 
-#[derive(Debug)]
 pub struct ParrotConfig {
     number_of_coconuts: usize,
     voltage: f32,
@@ -10,7 +9,6 @@ pub struct ParrotConfig {
 }
 
 impl ParrotConfig {
-    #[allow(dead_code)]
     pub fn new(number_of_coconuts: usize, voltage: f32, nailed: bool) -> Self {
         ParrotConfig {
             number_of_coconuts: number_of_coconuts,
@@ -72,14 +70,12 @@ impl Parrot for NorwegianBlueParrot {
 mod tests {
     use super::*;
 
-    #[derive(Debug)]
     struct ParrotTest<'a> {
         expected: f32,
         config: ParrotConfig,
         description: &'a str,
     }
 
-    #[macro_use]
     macro_rules! parrot_test {
         ($type: ty, $tests:expr) => {{
             for test in $tests {
