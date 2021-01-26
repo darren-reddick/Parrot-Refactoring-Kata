@@ -76,6 +76,8 @@ mod tests {
         description: &'a str,
     }
 
+    // parrot_test macro to run tests for types that implement the Parrot trait
+    // syntax: ([type that implements Parrot, Vec<ParrotTest>])
     macro_rules! parrot_test {
         ($type: ty, $tests:expr) => {{
             for test in $tests {
