@@ -61,16 +61,16 @@ fn base_speed() -> f32 {
 mod tests {
     use super::*;
 
-    pub struct TestData<'a> {
-        pub name: String,
-            input: Parrot<'a>,
+    pub struct TestData<'a, 'b> {
+        pub name: &'b str,
+        input: Parrot<'a>,
         pub expected: f32,
     }
 
-    impl TestData<'_> {
-        pub fn new(name: impl Into<String>, input: Parrot, expected: f32) -> TestData {
+    impl<'a, 'b> TestData<'a, 'b> {
+        pub fn new(name: &'b str, input: Parrot<'a>, expected: f32) -> TestData<'a, 'b> {
             TestData {
-                name: name.into(),
+                name: name,
                 input,
                 expected,
             }
