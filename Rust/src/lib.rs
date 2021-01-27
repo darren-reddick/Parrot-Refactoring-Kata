@@ -1,4 +1,5 @@
 struct Parrot<'a> {
+    // 'a must be passed in and outlive Parrot
     parrot_type: &'a str,
     number_of_coconuts: usize,
     voltage: f32,
@@ -27,6 +28,15 @@ impl<'a> Parrot<'a> {
             _ => Err("Should be unreachable!"),
         }
     }
+
+    pub fn create(t: &'a str, no: usize, v: f32, nailed: bool) -> Parrot {
+        Parrot {
+            parrot_type: t,
+            number_of_coconuts: no,
+            voltage: v,
+            nailed: nailed,
+        }
+    }
 }
 
 fn compute_base_speed_for_voltage(voltage: f32) -> f32 {
@@ -53,61 +63,75 @@ mod tests {
 
     #[test]
     fn european_parrot_speed() {
-        let parrot = Parrot { parrot_type: "european_parrot",
-                              number_of_coconuts: 0,
-                              voltage: 0.0,
-                              nailed: false };
+        let parrot = Parrot::create(
+            "european_parrot",
+            0,
+            0.0,
+            false,
+        );
         assert_eq!(parrot.speed().unwrap(), 12.0);
     }
 
     #[test]
     fn african_parrot_speed_with_one_coconut() {
-        let parrot = Parrot { parrot_type: "african_parrot",
-                              number_of_coconuts: 1,
-                              voltage: 0.0,
-                              nailed: false };
+        let parrot = Parrot::create(
+            "african_parrot",
+            1,
+            0.0,
+            false,
+        );
         assert_eq!(parrot.speed().unwrap(), 3.0);
     }
 
     #[test]
     fn african_parrot_speed_with_two_coconut() {
-        let parrot = Parrot { parrot_type: "african_parrot",
-                              number_of_coconuts: 2,
-                              voltage: 0.0,
-                              nailed: false };
+        let parrot = Parrot::create(
+            "african_parrot",
+            2,
+            0.0,
+            false,
+        );
         assert_eq!(parrot.speed().unwrap(), 0.0);
     }
 
     #[test]
     fn african_parrot_speed_with_no_coconut() {
-        let parrot = Parrot { parrot_type: "african_parrot",
-                              number_of_coconuts: 0,
-                              voltage: 0.0,
-                              nailed: false };
+        let parrot = Parrot::create(
+            "african_parrot",
+            0,
+            0.0,
+            false,
+        );
         assert_eq!(parrot.speed().unwrap(), 12.0);
     }
     #[test]
     fn nailed_norwegian_blue_parrot() {
-        let parrot = Parrot { parrot_type: "norwegian_blue_parrot",
-                              number_of_coconuts: 0,
-                              voltage: 1.5,
-                              nailed: true };
+        let parrot = Parrot::create(
+            "norwegian_blue_parrot",
+            0,
+            1.5,
+            true,
+        );
         assert_eq!(parrot.speed().unwrap(), 0.0);
     }
     #[test]
     fn not_nailed_norwegian_blue_parrot() {
-        let parrot = Parrot { parrot_type: "norwegian_blue_parrot",
-                              number_of_coconuts: 0,
-                              voltage: 1.5,
-                              nailed: false };
+        let parrot = Parrot::create(
+            "norwegian_blue_parrot",
+            0,
+            1.5,
+            false,
+        );
         assert_eq!(parrot.speed().unwrap(), 18.0);
     }
     #[test]
     fn not_nailed_norwegian_blue_parrot_with_high_voltage() {
-        let parrot = Parrot { parrot_type: "norwegian_blue_parrot",
-                              number_of_coconuts: 0,
-                              voltage: 4.0,
-                              nailed: false };
+        let parrot = Parrot::create(
+            "norwegian_blue_parrot",
+            0,
+            4.0,
+            false,
+        );
         assert_eq!(parrot.speed().unwrap(), 24.0);
     }
 }
