@@ -11,17 +11,20 @@ impl<'a> Parrot<'a> {
             "european_parrot" => Ok(base_speed()),
             "african_parrot" => {
                 let african_speed = base_speed() - load_factor() * self.number_of_coconuts as f32;
-                if african_speed > 0.0 { Ok(african_speed) } else { Ok(0.0)}
+                if african_speed > 0.0 {
+                    Ok(african_speed)
+                } else {
+                    Ok(0.0)
+                }
             }
             "norwegian_blue_parrot" => {
                 if self.nailed == true {
                     Ok(0.0)
-                }
-                else {
+                } else {
                     Ok(compute_base_speed_for_voltage(self.voltage))
                 }
             }
-            _ => Err("Should be unreachable!")
+            _ => Err("Should be unreachable!"),
         }
     }
 }
@@ -31,8 +34,7 @@ fn compute_base_speed_for_voltage(voltage: f32) -> f32 {
     let base_speed_for_voltage = voltage * base_speed();
     if base_speed_for_voltage < fixed_base_speed {
         base_speed_for_voltage
-    }
-    else {
+    } else {
         fixed_base_speed
     }
 }
