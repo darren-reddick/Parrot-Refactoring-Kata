@@ -1,4 +1,4 @@
-struct Parrot<'a> {
+pub struct Parrot<'a> {
     // 'a must be passed in and outlive Parrot
     parrot_type: &'a str,
     number_of_coconuts: usize,
@@ -61,77 +61,69 @@ fn base_speed() -> f32 {
 mod tests {
     use super::*;
 
-    #[test]
-    fn european_parrot_speed() {
-        let parrot = Parrot::create(
-            "european_parrot",
-            0,
-            0.0,
-            false,
-        );
-        assert_eq!(parrot.speed().unwrap(), 12.0);
+    pub struct TestData<'a> {
+        pub name: String,
+            input: Parrot<'a>,
+        pub expected: f32,
+    }
+
+    impl TestData<'_> {
+        pub fn new(name: impl Into<String>, input: Parrot, expected: f32) -> TestData {
+            TestData {
+                name: name.into(),
+                input,
+                expected,
+            }
+        }
+    }
+
+    fn run_tests(tests: Vec<TestData>) {
+        for test in tests {
+            println!("{:#?}", test.name);
+            assert_eq!(test.input.speed().unwrap(), test.expected);
+        }
     }
 
     #[test]
-    fn african_parrot_speed_with_one_coconut() {
-        let parrot = Parrot::create(
-            "african_parrot",
-            1,
-            0.0,
-            false,
-        );
-        assert_eq!(parrot.speed().unwrap(), 3.0);
-    }
+    pub fn main() {
+        let test_cases = vec![
+            TestData::new(
+                "european_parrot_speed",
+                Parrot::create("european_parrot", 0, 0.0, false),
+                12.0,
+            ),
+            TestData::new(
+                "african_parrot_speed_with_one_coconut",
+                Parrot::create("african_parrot", 1, 0.0, false),
+                3.0,
+            ),
+            TestData::new(
+                "african_parrot_speed_with_two_coconut",
+                Parrot::create("african_parrot", 2, 0.0, false),
+                0.0,
+            ),
+            TestData::new(
+                "african_parrot_speed_with_no_coconut",
+                Parrot::create("african_parrot", 0, 0.0, false),
+                12.0,
+            ),
+            TestData::new(
+                "nailed_norwegian_blue_parrot",
+                Parrot::create("norwegian_blue_parrot", 0, 1.5, true),
+                0.0,
+            ),
+            TestData::new(
+                "not_nailed_norwegian_blue_parrot",
+                Parrot::create("norwegian_blue_parrot", 0, 1.5, false),
+                18.0,
+            ),
+            TestData::new(
+                "not_nailed_norwegian_blue_parrot_with_high_voltage",
+                Parrot::create("norwegian_blue_parrot", 0, 4.0, false),
+                24.0,
+            ),
+        ];
 
-    #[test]
-    fn african_parrot_speed_with_two_coconut() {
-        let parrot = Parrot::create(
-            "african_parrot",
-            2,
-            0.0,
-            false,
-        );
-        assert_eq!(parrot.speed().unwrap(), 0.0);
-    }
-
-    #[test]
-    fn african_parrot_speed_with_no_coconut() {
-        let parrot = Parrot::create(
-            "african_parrot",
-            0,
-            0.0,
-            false,
-        );
-        assert_eq!(parrot.speed().unwrap(), 12.0);
-    }
-    #[test]
-    fn nailed_norwegian_blue_parrot() {
-        let parrot = Parrot::create(
-            "norwegian_blue_parrot",
-            0,
-            1.5,
-            true,
-        );
-        assert_eq!(parrot.speed().unwrap(), 0.0);
-    }
-    #[test]
-    fn not_nailed_norwegian_blue_parrot() {
-        let parrot = Parrot::create(
-            "norwegian_blue_parrot",
-            0,
-            1.5,
-            false,
-        );
-        assert_eq!(parrot.speed().unwrap(), 18.0);
-    }
-    #[test]
-    fn not_nailed_norwegian_blue_parrot_with_high_voltage() {
-        let parrot = Parrot::create(
-            "norwegian_blue_parrot",
-            0,
-            4.0,
-            false,
-        );
-        assert_eq!(parrot.speed().unwrap(), 24.0);
+        run_tests(test_cases)
     }
 }
